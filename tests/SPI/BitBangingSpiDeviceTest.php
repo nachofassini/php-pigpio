@@ -30,7 +30,7 @@ class BitBangingSpiDeviceTest extends TestCase
      */
     private $device;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
         $this->device = new BitBangingSpiDevice($this->client, 6, 8, 21, 22, 32000, new SpiFlags(['notReserved' => [0]]));
@@ -71,12 +71,10 @@ class BitBangingSpiDeviceTest extends TestCase
         self::assertTrue($this->device->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => bad GPIO pin given (PI_BAD_USER_GPIO)
-     */
     public function test_open_badGpioPin()
     {
+        $this->expectExceptionMessage("Opening device failed => bad GPIO pin given (PI_BAD_USER_GPIO)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_BAD_USER_GPIO);
 
         $this->client->expects(self::once())
@@ -86,12 +84,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => GPIO pin is already in use (PI_GPIO_IN_USE)
-     */
     public function test_open_gpioAlreadyInUse()
     {
+        $this->expectExceptionMessage("Opening device failed => GPIO pin is already in use (PI_GPIO_IN_USE)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_GPIO_IN_USE);
 
         $this->client->expects(self::once())
@@ -101,12 +97,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => bad baud rate given (PI_BAD_SPI_BAUD)
-     */
     public function test_open_badBaudRate()
     {
+        $this->expectExceptionMessage("Opening device failed => bad baud rate given (PI_BAD_SPI_BAUD)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_BAD_SPI_BAUD);
 
         $this->client->expects(self::once())
@@ -116,12 +110,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => unknown error
-     */
     public function test_open_unknownError()
     {
+        $this->expectExceptionMessage("Opening device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::once())
@@ -164,12 +156,10 @@ class BitBangingSpiDeviceTest extends TestCase
         self::assertFalse($this->device->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\ClosingDeviceFailedException
-     * @expectedExceptionMessage Closing device failed (internal library error) => bad GPIO pin given (PI_BAD_USER_GPIO)
-     */
     public function test_close_badGpioPin()
     {
+        $this->expectExceptionMessage("Closing device failed (internal library error) => bad GPIO pin given (PI_BAD_USER_GPIO)");
+        $this->expectException(\Volantus\Pigpio\SPI\ClosingDeviceFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_BAD_USER_GPIO);
 
         $this->client->expects(self::at(0))
@@ -184,12 +174,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->close();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\ClosingDeviceFailedException
-     * @expectedExceptionMessage Closing device failed (internal library error) => no SPI action in progress on this pin (PI_NOT_SPI_GPIO)
-     */
     public function test_close_noSpiInProgress()
     {
+        $this->expectExceptionMessage("Closing device failed (internal library error) => no SPI action in progress on this pin (PI_NOT_SPI_GPIO)");
+        $this->expectException(\Volantus\Pigpio\SPI\ClosingDeviceFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_NOT_SPI_GPIO);
 
         $this->client->expects(self::at(0))
@@ -204,12 +192,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->close();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\ClosingDeviceFailedException
-     * @expectedExceptionMessage Closing device failed => unknown error
-     */
     public function test_close_unknownError()
     {
+        $this->expectExceptionMessage("Closing device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\ClosingDeviceFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::at(0))
@@ -241,21 +227,17 @@ class BitBangingSpiDeviceTest extends TestCase
         self::assertEquals([16, 18, 19], $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\DeviceNotOpenException
-     * @expectedExceptionMessage Device needs to be opened first for cross transfer
-     */
     public function test_crossTransfer_notOpen()
     {
+        $this->expectExceptionMessage("Device needs to be opened first for cross transfer");
+        $this->expectException(\Volantus\Pigpio\SPI\DeviceNotOpenException::class);
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Cross transfer failed (internal library error) => bad GPIO pin given (PI_BAD_USER_GPIO)
-     */
     public function test_crossTransfer_badGpioPin()
     {
+        $this->expectExceptionMessage("Cross transfer failed (internal library error) => bad GPIO pin given (PI_BAD_USER_GPIO)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_BAD_USER_GPIO);
 
         $this->client->expects(self::at(0))
@@ -270,12 +252,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Cross transfer failed (internal library error) => no SPI action in progress on this pin (PI_NOT_SPI_GPIO)
-     */
     public function test_crossTransfer_noSpiInProgress()
     {
+        $this->expectExceptionMessage("Cross transfer failed (internal library error) => no SPI action in progress on this pin (PI_NOT_SPI_GPIO)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(BitBangingSpiDevice::PI_NOT_SPI_GPIO);
 
         $this->client->expects(self::at(0))
@@ -290,12 +270,10 @@ class BitBangingSpiDeviceTest extends TestCase
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Cross transfer failed => unknown error
-     */
     public function test_crossTransfer_unknownError()
     {
+        $this->expectExceptionMessage("Cross transfer failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::at(0))

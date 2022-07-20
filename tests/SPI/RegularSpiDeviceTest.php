@@ -30,7 +30,7 @@ class RegularSpiDeviceTest extends TestCase
      */
     private $device;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
         $this->device = new RegularSpiDevice($this->client, 1, 32000, new SpiFlags(['notReserved' => [0]]));
@@ -71,12 +71,10 @@ class RegularSpiDeviceTest extends TestCase
         self::assertTrue($this->device->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => bad SPI channel given (PI_BAD_SPI_CHANNEL)
-     */
     public function test_open_failed_badChannel()
     {
+        $this->expectExceptionMessage("Opening device failed => bad SPI channel given (PI_BAD_SPI_CHANNEL)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_SPI_CHANNEL);
 
         $this->client->expects(self::once())
@@ -86,12 +84,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => bad speed given (PI_BAD_SPI_SPEED)
-     */
     public function test_open_failed_badSpeed()
     {
+        $this->expectExceptionMessage("Opening device failed => bad speed given (PI_BAD_SPI_SPEED)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_SPI_SPEED);
 
         $this->client->expects(self::once())
@@ -101,12 +97,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => bad flags given (PI_BAD_FLAGS)
-     */
     public function test_open_failed_badFlags()
     {
+        $this->expectExceptionMessage("Opening device failed => bad flags given (PI_BAD_FLAGS)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_FLAGS);
 
         $this->client->expects(self::once())
@@ -116,12 +110,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => no AUX available (PI_NO_AUX_SPI)
-     */
     public function test_open_failed_noAux()
     {
+        $this->expectExceptionMessage("Opening device failed => no AUX available (PI_NO_AUX_SPI)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_NO_AUX_SPI);
 
         $this->client->expects(self::once())
@@ -131,12 +123,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed (PI_SPI_OPEN_FAILED)
-     */
     public function test_open_failed_openingFailed()
     {
+        $this->expectExceptionMessage("Opening device failed (PI_SPI_OPEN_FAILED)");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_SPI_OPEN_FAILED);
 
         $this->client->expects(self::once())
@@ -146,12 +136,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\OpeningDeviceFailedException
-     * @expectedExceptionMessage Opening device failed => unknown error
-     */
     public function test_open_failed_unknownError()
     {
+        $this->expectExceptionMessage("Opening device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\OpeningDeviceFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::once())
@@ -184,12 +172,10 @@ class RegularSpiDeviceTest extends TestCase
         self::assertFalse($this->device->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\ClosingDeviceFailedException
-     * @expectedExceptionMessage Closing SPI device failed => daemon responded that wrong handle was given (PI_BAD_HANDLE)
-     */
     public function test_close_failed_wrongHandle()
     {
+        $this->expectExceptionMessage("Closing SPI device failed => daemon responded that wrong handle was given (PI_BAD_HANDLE)");
+        $this->expectException(\Volantus\Pigpio\SPI\ClosingDeviceFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_HANDLE);
 
         $this->client->expects(self::at(0))
@@ -204,12 +190,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->close();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\ClosingDeviceFailedException
-     * @expectedExceptionMessage Closing SPI device failed => unknown error
-     */
     public function test_close_failed_unknownError()
     {
+        $this->expectExceptionMessage("Closing SPI device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\ClosingDeviceFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::at(0))
@@ -241,21 +225,17 @@ class RegularSpiDeviceTest extends TestCase
         self::assertEquals([64, 128], $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\DeviceNotOpenException
-     * @expectedExceptionMessage Device needs to be opened first for reading
-     */
     public function test_read_notOpen()
     {
+        $this->expectExceptionMessage("Device needs to be opened first for reading");
+        $this->expectException(\Volantus\Pigpio\SPI\DeviceNotOpenException::class);
         $this->device->read(4);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Reading from SPI device failed => bad handle (PI_BAD_HANDLE)
-     */
     public function test_read_badHandle()
     {
+        $this->expectExceptionMessage("Reading from SPI device failed => bad handle (PI_BAD_HANDLE)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_HANDLE);
 
         $this->client->expects(self::at(0))
@@ -270,12 +250,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->read(2);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Reading from SPI device failed => bad count given (PI_BAD_SPI_COUNT)
-     */
     public function test_read_badCount()
     {
+        $this->expectExceptionMessage("Reading from SPI device failed => bad count given (PI_BAD_SPI_COUNT)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_SPI_COUNT);
 
         $this->client->expects(self::at(0))
@@ -290,12 +268,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->read(-1);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Reading from SPI device failed => data transfer failed (PI_SPI_XFER_FAILED)
-     */
     public function test_read_transferFailed()
     {
+        $this->expectExceptionMessage("Reading from SPI device failed => data transfer failed (PI_SPI_XFER_FAILED)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_SPI_XFER_FAILED);
 
         $this->client->expects(self::at(0))
@@ -310,12 +286,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->read(2);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Reading from SPI device failed => unknown error
-     */
     public function test_read_unknownError()
     {
+        $this->expectExceptionMessage("Reading from SPI device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::at(0))
@@ -346,21 +320,17 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->write([32, 64]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\DeviceNotOpenException
-     * @expectedExceptionMessage Device needs to be opened first for writing
-     */
     public function test_write_notOpen()
     {
+        $this->expectExceptionMessage("Device needs to be opened first for writing");
+        $this->expectException(\Volantus\Pigpio\SPI\DeviceNotOpenException::class);
         $this->device->write([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Writing to SPI device failed => bad handle (PI_BAD_HANDLE)
-     */
     public function test_write_badHandle()
     {
+        $this->expectExceptionMessage("Writing to SPI device failed => bad handle (PI_BAD_HANDLE)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_HANDLE);
 
         $this->client->expects(self::at(0))
@@ -375,12 +345,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->write([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Writing to SPI device failed => bad count given (PI_BAD_SPI_COUNT)
-     */
     public function test_write_badCount()
     {
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
+        $this->expectExceptionMessage("Writing to SPI device failed => bad count given (PI_BAD_SPI_COUNT)");
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_SPI_COUNT);
 
         $this->client->expects(self::at(0))
@@ -395,12 +363,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->write([]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Writing to SPI device failed => data transfer failed (PI_SPI_XFER_FAILED)
-     */
     public function test_write_transferFailed()
     {
+        $this->expectExceptionMessage("Writing to SPI device failed => data transfer failed (PI_SPI_XFER_FAILED)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_SPI_XFER_FAILED);
 
         $this->client->expects(self::at(0))
@@ -415,12 +381,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->write([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage Writing to SPI device failed => unknown error
-     */
     public function test_write_unknownError()
     {
+        $this->expectExceptionMessage("Writing to SPI device failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(-512);
 
         $this->client->expects(self::at(0))
@@ -453,21 +417,17 @@ class RegularSpiDeviceTest extends TestCase
     }
 
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\DeviceNotOpenException
-     * @expectedExceptionMessage Device needs to be opened first for cross transfer
-     */
     public function test_crossTransfer_notOpen()
     {
+        $this->expectExceptionMessage("Device needs to be opened first for cross transfer");
+        $this->expectException(\Volantus\Pigpio\SPI\DeviceNotOpenException::class);
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage SPI cross transfer failed => bad handle (PI_BAD_HANDLE)
-     */
     public function test_crossTransfer_badHandle()
     {
+        $this->expectExceptionMessage("SPI cross transfer failed => bad handle (PI_BAD_HANDLE)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_HANDLE);
 
         $this->client->expects(self::at(0))
@@ -482,12 +442,10 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage SPI cross transfer failed => bad count given (PI_BAD_SPI_COUNT)
-     */
     public function test_crossTransfer_badCount()
     {
+        $this->expectExceptionMessage("SPI cross transfer failed => bad count given (PI_BAD_SPI_COUNT)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_BAD_SPI_COUNT);
 
         $this->client->expects(self::at(0))
@@ -502,41 +460,35 @@ class RegularSpiDeviceTest extends TestCase
         $this->device->crossTransfer([]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage SPI cross transfer failed => data transfer failed (PI_SPI_XFER_FAILED)
-     */
     public function test_crossTransfer_transferFailed()
     {
+        $this->expectExceptionMessage("SPI cross transfer failed => data transfer failed (PI_SPI_XFER_FAILED)");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(RegularSpiDevice::PI_SPI_XFER_FAILED);
 
-        $this->client->expects(self::at(0))
+        $this->client->expects($this->exactly(2))
             ->method('sendRaw')
-            ->willReturn(new Response(49));
-
-        $this->client->expects(self::at(1))
-            ->method('sendRaw')
-            ->willReturn(new Response(RegularSpiDevice::PI_SPI_XFER_FAILED));
+            ->willReturnOnConsecutiveCalls(
+                new Response(49),
+                new Response(RegularSpiDevice::PI_SPI_XFER_FAILED),
+            );
 
         $this->device->open();
         $this->device->crossTransfer([32]);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\SPI\TransferFailedException
-     * @expectedExceptionMessage SPI cross transfer failed => unknown error
-     */
     public function test_crossTransfer_unknownError()
     {
+        $this->expectExceptionMessage("SPI cross transfer failed => unknown error");
+        $this->expectException(\Volantus\Pigpio\SPI\TransferFailedException::class);
         $this->expectExceptionCode(-512);
 
-        $this->client->expects(self::at(0))
+        $this->client->expects($this->exactly(2))
             ->method('sendRaw')
-            ->willReturn(new Response(49));
-
-        $this->client->expects(self::at(1))
-            ->method('sendRaw')
-            ->willReturn(new Response(-512));
+            ->willReturnOnConsecutiveCalls(
+                new Response(49),
+                new Response(-512),
+            );
 
         $this->device->open();
         $this->device->crossTransfer([32]);

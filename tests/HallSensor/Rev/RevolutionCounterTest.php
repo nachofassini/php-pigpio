@@ -28,7 +28,7 @@ class RevolutionCounterTest extends TestCase
      */
     private $counter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->notifier = $this->getMockBuilder(Notifier::class)->disableOriginalConstructor()->getMock();
         $this->counter = new RevolutionCounter($this->notifier);

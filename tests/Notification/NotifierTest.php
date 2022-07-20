@@ -47,7 +47,7 @@ class NotifierTest extends TestCase
      */
     private $notifier;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->tmpDirectory = sys_get_temp_dir() . '/' . uniqid();
         $this->fileSystem = new Filesystem();
@@ -68,13 +68,11 @@ class NotifierTest extends TestCase
         self::assertTrue($this->notifier->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\OpeningFailedException
-     * @expectedExceptionMessage Failed receiving notification handle (Error: -1)
-     * @expectedExceptionCode -1
-     */
     public function test_open_failed()
     {
+        $this->expectExceptionCode(-1);
+        $this->expectExceptionMessage("Failed receiving notification handle (Error: -1)");
+        $this->expectException(\Volantus\Pigpio\Notification\OpeningFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::NO, 0, 0)))
@@ -83,11 +81,9 @@ class NotifierTest extends TestCase
         $this->notifier->open();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\OpeningFailedException
-     */
     public function test_open_openingPipeFailed()
     {
+        $this->expectException(\Volantus\Pigpio\Notification\OpeningFailedException::class);
         $this->expectExceptionMessage('Failed to open file handle to pipe ' . $this->tmpDirectory . '/pigpio15');
 
         $this->client->method('sendRaw')->willReturn(new Response(15));
@@ -107,12 +103,10 @@ class NotifierTest extends TestCase
         self::assertTrue($this->notifier->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\HandleMissingException
-     * @expectedExceptionMessage Notifier needs to be opened first
-     */
     public function test_start_notOpened()
     {
+        $this->expectExceptionMessage("Notifier needs to be opened first");
+        $this->expectException(\Volantus\Pigpio\Notification\HandleMissingException::class);
         $this->notifier->start(new Bitmap([20]), function () {});
     }
 
@@ -135,13 +129,11 @@ class NotifierTest extends TestCase
         self::assertTrue($this->notifier->isStarted());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\BeginFailedException
-     * @expectedExceptionMessage Failed starting notification (Error: -12)
-     * @expectedExceptionCode -12
-     */
     public function test_start_failure()
     {
+        $this->expectExceptionCode(-12);
+        $this->expectExceptionMessage("Failed starting notification (Error: -12)");
+        $this->expectException(\Volantus\Pigpio\Notification\BeginFailedException::class);
         $this->createPipe(41);
 
         $this->client->expects(self::at(0))
@@ -156,12 +148,10 @@ class NotifierTest extends TestCase
         $this->notifier->start(new Bitmap([20]), function () {});
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\BrokenPipeException
-     * @expectedExceptionMessage File handle to pipe is invalid
-     */
     public function test_start_brokenPipe()
     {
+        $this->expectExceptionMessage("File handle to pipe is invalid");
+        $this->expectException(\Volantus\Pigpio\Notification\BrokenPipeException::class);
         $this->client->expects(self::at(0))
             ->method('sendRaw')
             ->willReturn(new Response(41));
@@ -258,12 +248,10 @@ class NotifierTest extends TestCase
         self::assertTrue($this->notifier->isOpen());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\PausingFailedException
-     * @expectedExceptionMessage Failed pausing notification (Error: -8)
-     */
     public function test_pause_failed()
     {
+        $this->expectExceptionMessage("Failed pausing notification (Error: -8)");
+        $this->expectException(\Volantus\Pigpio\Notification\PausingFailedException::class);
         $this->createPipe(41);
 
         $this->client->expects(self::at(0))
@@ -316,13 +304,11 @@ class NotifierTest extends TestCase
         self::assertFalse($this->notifier->isPaused());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\CancelFailedException
-     * @expectedExceptionMessage Failed canceling notification (Error: -5)
-     * @expectedExceptionCode -5
-     */
     public function test_cancel_failed()
     {
+        $this->expectExceptionCode(-5);
+        $this->expectExceptionMessage("Failed canceling notification (Error: -5)");
+        $this->expectException(\Volantus\Pigpio\Notification\CancelFailedException::class);
         $this->createPipe(36);
 
         $this->client->expects(self::at(0))
@@ -358,12 +344,10 @@ class NotifierTest extends TestCase
         self::assertFalse($this->notifier->isPaused());
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\NotStartedException
-     * @expectedExceptionMessage Notifier needs to be started first
-     */
     public function test_tick_notStarted()
     {
+        $this->expectExceptionMessage("Notifier needs to be started first");
+        $this->expectException(\Volantus\Pigpio\Notification\NotStartedException::class);
         $this->notifier->tick();
     }
 
@@ -435,7 +419,7 @@ class NotifierTest extends TestCase
         $this->fileSystem->touch($this->tmpDirectory . '/pigpio' . $handle);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fileSystem->remove($this->tmpDirectory);
     }

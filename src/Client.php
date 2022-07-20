@@ -93,7 +93,7 @@ class Client
     {
         $delta = microtime(true) - $this->requestStarted;
         $delta *= 1000000;
-        $result = $timeout -  $delta;
+        $result =  intval($timeout -  $delta);
 
         if ($result <= 0) {
             throw new TimeoutException("Daemon did not respond within specified timeout ($timeout µs)");

@@ -28,7 +28,7 @@ class PwmReceiverTest extends TestCase
      */
     private $receiver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->notifier = $this->getMockBuilder(Notifier::class)->disableOriginalConstructor()->getMock();
         $this->receiver = new PwmReceiver($this->notifier);

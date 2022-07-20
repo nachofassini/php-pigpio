@@ -11,12 +11,10 @@ use Volantus\Pigpio\Network\Socket;
  */
 class SocketTest extends TestCase
 {
-    /**
-     * @expectedException \Volantus\Pigpio\Network\SocketException
-     * @expectedExceptionMessage socket_connect() failed
-     */
     public function test_construct_connectFailed()
     {
+        $this->expectExceptionMessage("socket_connect() failed");
+        $this->expectException(\Volantus\Pigpio\Network\SocketException::class);
         new Socket('256.0.0.1', 80);
     }
 }

@@ -21,17 +21,15 @@ class EventFactoryTest extends TestCase
      */
     private $factory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = new EventFactory();
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Notification\Event\DecodingFailedException
-     * @expectedExceptionMessage Unable to unpack data. (Message: 616263)
-     */
     public function test_decode_invalidData()
     {
+        $this->expectExceptionMessage("Unable to unpack data. (Message: 616263)");
+        $this->expectException(\Volantus\Pigpio\Notification\Event\DecodingFailedException::class);
         $this->factory->decode('abc');
     }
 

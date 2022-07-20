@@ -29,7 +29,7 @@ class ClientTest extends TestCase
      */
     private $service;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->socket = $this->getMockBuilder(Socket::class)->disableOriginalConstructor()->getMock();
         $this->service = new Client($this->socket);
@@ -156,12 +156,11 @@ class ClientTest extends TestCase
         self::assertSame($result, $expectedResponse);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Protocol\TimeoutException
-     * @expectedExceptionMessage Daemon did not respond within specified timeout (50000 µs)
-     */
     public function test_sendRaw_timeoutOccurredOnSocketLevel()
     {
+        $this->expectException(\Volantus\Pigpio\Protocol\TimeoutException::class);
+        $this->expectExceptionMessage("Daemon did not respond within specified timeout (50000 µs)");
+
         $this->socket->expects(self::once())
             ->method('listen')
             ->willReturn('');
@@ -191,12 +190,10 @@ class ClientTest extends TestCase
         $this->service->sendRaw($request);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\Protocol\TimeoutException
-     * @expectedExceptionMessage Daemon did not respond within specified timeout (1 µs)
-     */
     public function test_sendRaw_calculatedTimeoutLessThenZero()
     {
+        $this->expectExceptionMessage("Daemon did not respond within specified timeout (1 µs)");
+        $this->expectException(\Volantus\Pigpio\Protocol\TimeoutException::class);
         $request = new DefaultRequest(8, 21, 1500, new DefaultResponseStructure(), 1);
         $this->service->sendRaw($request);
     }

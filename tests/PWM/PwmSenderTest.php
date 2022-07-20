@@ -26,7 +26,7 @@ class PwmSenderTest extends TestCase
      */
     private $sender;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
         $this->sender = new PwmSender($this->client);
@@ -42,12 +42,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setPulseWidth(14, 1700);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage SERVO command failed => bad GPIO pin given (status code -2)
-     */
     public function test_setPulseWidth_badGpiPin()
     {
+        $this->expectExceptionMessage("SERVO command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::SERVO, 50, 1500)))
@@ -56,12 +54,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setPulseWidth(50, 1500);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage SERVO command failed => given pulse width is out of valid range (status code -7)
-     */
     public function test_setPulseWidth_badPulseWidth()
     {
+        $this->expectExceptionMessage("SERVO command failed => given pulse width is out of valid range (status code -7)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::SERVO, 14, -1)))
@@ -70,12 +66,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setPulseWidth(14, -1);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage SERVO command failed => operation was not permitted (status code -41)
-     */
     public function test_setPulseWidth_notPermitted()
     {
+        $this->expectExceptionMessage("SERVO command failed => operation was not permitted (status code -41)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::SERVO, 14, 1500)))
@@ -83,13 +77,11 @@ class PwmSenderTest extends TestCase
 
         $this->sender->setPulseWidth(14, 1500);
     }
-    
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage SERVO command failed with status code -3
-     */
+
     public function test_setPulseWidth_unknown_failure()
     {
+        $this->expectExceptionMessage("SERVO command failed with status code -3");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::SERVO, 14, 1700)))
@@ -108,12 +100,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setDutyCycle(14, 150);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PWM command failed => bad GPIO pin given (status code -2)
-     */
     public function test_setDutyCycle_badGpiPin()
     {
+        $this->expectExceptionMessage("PWM command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PWM, 50, 150)))
@@ -122,12 +112,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setDutyCycle(50, 150);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PWM command failed => given dutycycle is out of valid range (status code -8)
-     */
     public function test_setDutyCycle_badDutyCycle()
     {
+        $this->expectExceptionMessage("PWM command failed => given dutycycle is out of valid range (status code -8)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PWM, 14, -1)))
@@ -136,12 +124,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setDutyCycle(14, -1);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PWM command failed => operation was not permitted (status code -41)
-     */
     public function test_setDutyCycle_notPermitted()
     {
+        $this->expectExceptionMessage("PWM command failed => operation was not permitted (status code -41)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PWM, 14, 170)))
@@ -150,12 +136,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setDutyCycle(14, 170);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PWM command failed with status code -99
-     */
     public function test_setDutyCycle_unknown_failure()
     {
+        $this->expectExceptionMessage("PWM command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PWM, 14, 1700)))
@@ -174,12 +158,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setRange(14, 1024);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PRS command failed => bad GPIO pin given (status code -2)
-     */
     public function test_setRange_badGpiPin()
     {
+        $this->expectExceptionMessage("PRS command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PRS, 50, 1024)))
@@ -188,12 +170,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setRange(50, 1024);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PRS command failed => given range is not valid (status code -21)
-     */
     public function test_setRange_badRange()
     {
+        $this->expectExceptionMessage("PRS command failed => given range is not valid (status code -21)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PRS, 14, -1)))
@@ -202,12 +182,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setRange(14, -1);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PRS command failed with status code -99
-     */
     public function test_setRange_unknownFailure()
     {
+        $this->expectExceptionMessage("PRS command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PRS, 14, 1024)))
@@ -226,12 +204,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setFrequency(14, 250);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PFS command failed => bad GPIO pin given (status code -2)
-     */
     public function test_setFrequency_badGpiPin()
     {
+        $this->expectExceptionMessage("PFS command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PFS, 50, 250)))
@@ -240,12 +216,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setFrequency(50, 250);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PFS command failed => operation was not permitted (status code -41)
-     */
     public function test_setFrequency_notPermitted()
     {
+        $this->expectExceptionMessage("PFS command failed => operation was not permitted (status code -41)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PFS, 14, 250)))
@@ -254,12 +228,10 @@ class PwmSenderTest extends TestCase
         $this->sender->setFrequency(14, 250);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PFS command failed with status code -99
-     */
     public function test_setFrequency_unknownFailure()
     {
+        $this->expectExceptionMessage("PFS command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PFS, 14, 250)))
@@ -279,12 +251,10 @@ class PwmSenderTest extends TestCase
         self::assertEquals(1600, $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GPW command failed => bad GPIO pin given (status code -2)
-     */
     public function test_getPulseWidth_badGpioPin()
     {
+        $this->expectExceptionMessage("GPW command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GPW, 50, 0)))
@@ -293,12 +263,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getPulseWidth(50);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GPW command failed => GPIO is not in use for servo pulses (status code -93)
-     */
     public function test_getPulseWidth_notInUse()
     {
+        $this->expectExceptionMessage("GPW command failed => GPIO is not in use for servo pulses (status code -93)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GPW, 14, 0)))
@@ -307,12 +275,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getPulseWidth(14);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GPW command failed with status code -99
-     */
     public function test_getPulseWidth_unknownError()
     {
+        $this->expectExceptionMessage("GPW command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GPW, 14, 0)))
@@ -332,12 +298,10 @@ class PwmSenderTest extends TestCase
         self::assertEquals(255, $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PRG command failed => bad GPIO pin given (status code -2)
-     */
     public function test_getRange_badGpioPin()
     {
+        $this->expectExceptionMessage("PRG command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PRG, 50, 0)))
@@ -346,12 +310,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getRange(50);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PRG command failed with status code -99
-     */
     public function test_getRange_unknownError()
     {
+        $this->expectExceptionMessage("PRG command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PRG, 14, 0)))
@@ -371,12 +333,10 @@ class PwmSenderTest extends TestCase
         self::assertEquals(150, $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GDC command failed => bad GPIO pin given (status code -2)
-     */
     public function test_getDutyCycle_badGpioPin()
     {
+        $this->expectExceptionMessage("GDC command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GDC, 50, 0)))
@@ -385,12 +345,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getDutyCycle(50);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GDC command failed => GPIO is not in use for PWM (status code -92)
-     */
     public function test_getDutyCycle_notInUse()
     {
+        $this->expectExceptionMessage("GDC command failed => GPIO is not in use for PWM (status code -92)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GDC, 14, 0)))
@@ -399,12 +357,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getDutyCycle(14);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage GDC command failed with status code -99
-     */
     public function test_getDutyCycle_unknownError()
     {
+        $this->expectExceptionMessage("GDC command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::GDC, 14, 0)))
@@ -424,12 +380,10 @@ class PwmSenderTest extends TestCase
         self::assertEquals(250, $result);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PFG command failed => bad GPIO pin given (status code -2)
-     */
     public function test_getFrequency_badGpioPin()
     {
+        $this->expectExceptionMessage("PFG command failed => bad GPIO pin given (status code -2)");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PFG, 50, 0)))
@@ -438,12 +392,10 @@ class PwmSenderTest extends TestCase
         $this->sender->getFrequency(50);
     }
 
-    /**
-     * @expectedException \Volantus\Pigpio\PWM\CommandFailedException
-     * @expectedExceptionMessage PFG command failed with status code -99
-     */
     public function test_getFrequency_unknownError()
     {
+        $this->expectExceptionMessage("PFG command failed with status code -99");
+        $this->expectException(\Volantus\Pigpio\PWM\CommandFailedException::class);
         $this->client->expects(self::once())
             ->method('sendRaw')
             ->with(self::equalTo(new DefaultRequest(Commands::PFG, 14, 0)))
